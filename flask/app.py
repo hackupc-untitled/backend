@@ -9,6 +9,7 @@ client = ''
 @app.route('/save', methods=['POST'])
 def save():
     json_data = request.get_json()
+    print(json_data)
     client = getInfluxClient()
     client.write_points(json_data)
 
@@ -16,19 +17,9 @@ def save():
 #Each app.route represents an endpoint
 @app.route('/countGalileos', methods=['GET'])
 def countGalileos(mac_address):
-    flux_query = '''
-        from(bucket: "your_bucket")
-        |> range(start: -1h)  // Adjust the time range as needed
-        |> filter(fn: (r) => r["_measurement"] == "raw" and r["mac_address"] == "your_mac_address" and r["constellation"] == "your_constellation")
-        |> count()
-        '''
-    result = client.query_api().query_data_frame(flux_query)
+    query = 'SELECT COUNT("constellation") FROM "raw" WHERE "constellation"=\'1\' GROUP BY "user_id"'
+    result = client.query(query)
     count = result.iloc[0]['_value']
-
-
-
-
-
 
 
 @app.route('/test', methods=['POST'])
