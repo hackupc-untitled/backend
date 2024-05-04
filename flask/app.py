@@ -1,32 +1,27 @@
-from flask import Flask
+from flask import Flask, request, Response, jsonify
+from clients import *
 #from mi_app.users.views import users_bp
 #from mi_app.posts.views import posts_bp
 
 app = Flask(__name__)
 
-# Registrar los blueprints
-#app.register_blueprint(users_bp)
-#app.register_blueprint(posts_bp)
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
-
-''' EXEMPLE BLUEPRINT
-    Un blueprint es un modul de la aplicacio 
-    per poder organitzar els endpoints per modul/feature
-
-    from flask import Blueprint
-
-    users_bp = Blueprint("users", __name__)
-
-    @users_bp.route("/users")
-    def get_users():
-        return "Lista de usuarios"
-
-    @users_bp.route("/users/<int:user_id>")
-    def get_user(user_id):
-        return f"Información del usuario con ID {user_id}"
+@app.route('/save', methods=['POST'])
+def save():
+    json_data = request.get_json()
+    client = getInfluxClient()
+    client.write_points(json_data)
 
 
-'''
+#@app.route('/', methods=['GET'])
+
+
+@app.route('/test', methods=['GET'])
+def test():
+    return Response(status=200)
+    
+    
+    
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000,debug=True)  # Change port number if needed
