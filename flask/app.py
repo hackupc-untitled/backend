@@ -9,8 +9,9 @@ client = ''
 @app.route('/save', methods=['POST'])
 def save():
     json_data = request.get_json()
-    print(json_data)
+    #print(json_data)
     client = getInfluxClient()
+    json_data = {'measurement': 'status', 'tags': {'satelliteCount': 34, 'azimuthDegrees': '282.0', 'carrierFrequencyHz': '1575420032.0', 'cn0DbHz': '0.0', 'elevationDegrees': '42.0', 'svid': '19', 'hasAlmanacData': 'false', 'hasCarrierFrequencyHz': 'true', 'hasEphemerisData': 'false', 'usedInFix': 'false', 'mac-address': {'version': 'REL', 'board': 'k6853v1_64_6360_k419', 'bootloader': 'unknown', 'brand': 'OPPO', 'device': 'OP4F4DL1', 'display': 'CPH2211_11_F.51', 'fingerprint': 'OPPO/CPH2211EEA/OP4F4DL1:13/TP1A.220905.001/R.15a1d76-4bc5:user/release-keys', 'hardware': 'mt6853', 'host': 'dg02-pool06-kvm61', 'id': 'TP1A.220905.001', 'manufacturer': 'OPPO', 'model': 'CPH2211', 'product': 'CPH2211EEA'}, 'date': '04-05-2024 20:34:13'}, 'fields': {'constellationType': 1}}
     client.write_points(json_data)
 
 
