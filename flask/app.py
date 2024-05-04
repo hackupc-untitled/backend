@@ -16,9 +16,15 @@ def save():
 #Each app.route represents an endpoint
 @app.route('/countGalileos', methods=['GET'])
 def countGalileos(mac_address):
-    query = 'SELECT * FROM raw WHERE mac_address = \'' + mac_address + '\' LIMIT 10'
-    result = client.query(query)
-    return Response(status=200)
+    flux_query = '''
+        from(bucket: "your_bucket")
+        |> range(start: -1h)  // Adjust the time range as needed
+        |> filter(fn: (r) => r["_measurement"] == "raw" and r["mac_address"] == "your_mac_address" and r["constellation"] == "your_constellation")
+        |> count()
+        '''
+    result = client.query_api().query_data_frame(flux_query)
+    count = result.iloc[0]['_value']
+
 
 
 
