@@ -29,6 +29,8 @@ def countGalileos(mac_address):
 
 
 
+
+
 @app.route('/test', methods=['POST'])
 def test():
     print(request.get_json())
