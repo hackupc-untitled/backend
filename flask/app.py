@@ -30,21 +30,25 @@ class User:
 def register():
     username = request.json.get('username')
     password = request.json.get('password')
+    
+    # Establish connection to the database
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    
     cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
     user = cursor.fetchone()
     if user:
+        conn.close()  # Close the connection before returning
         return jsonify({'message': 'User already exists'}), 400
+    
     hashed_password = generate_password_hash(password)
     user = User(1, username, hashed_password)
     
-    
-
-    conn = sqlite3.connect('users.db')
-    cursor = conn.cursor()
     cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)',
                    (user.username, user.password))
     conn.commit()
-    conn.close()
+    
+    conn.close()  # Close the connection after committing changes
     
     return jsonify({'message': 'User created successfully'}), 201
 
@@ -93,9 +97,9 @@ def get_users():
 
 
 @app.route('/save', methods=['POST'])
+
 def save():
     json_data = request.get_json()
-    client = getInfluxClient()
     client.write_points(json_data)
 
 
@@ -119,4 +123,5 @@ def test():
 
 if __name__ == '__main__':
     create_table()
+    client = getInfluxClient()
     app.run(host='0.0.0.0', port=5000, debug=True)

@@ -61,4 +61,4 @@ def printAllTest():
     print("-----------------Status ------------------\n")
     print(result)
     client.close()
-#printAllTest()
+    printAllTest()
