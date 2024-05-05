@@ -31,7 +31,7 @@ def getInfluxTestClient():
 
 def printAllTest():
         
-    client = getInfluxTestClient()
+    client = getInfluxClient()
 
     query = 'SELECT * FROM Fix LIMIT 1'
 
@@ -54,7 +54,7 @@ def printAllTest():
     print("-----------------Raw ------------------\n")
     print(result)
 
-    query = 'SELECT * FROM Status LIMIT 1'
+    query = 'SELECT * FROM fix LIMIT 10'
 
     result = client.query(query)
     
